@@ -1,0 +1,54 @@
+
+# Created by https://www.gitignore.io/api/java,java-web
+
+### Java ###
+# Compiled class file
+*.class
+
+# Log file
+*.log
+
+# BlueJ files
+*.ctxt
+
+# Mobile Tools for Java (J2ME)
+.mtj.tmp/
+
+# Package Files #
+*.jar
+*.war
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
+hs_err_pid*
+
+### Java-Web ###
+## ignoring target file
+target/
+
+# End of https://www.gitignore.io/api/java,java-web
+/build/
+
+#Bootstrap
+/WebContent/css/bootstrap/bootstrap.css
+/WebContent/css/bootstrap/bootstrap.css.map
+/WebContent/css/bootstrap/bootstrap.min.css.map
+/WebContent/css/bootstrap/bootstrap-grid.css
+/WebContent/css/bootstrap/bootstrap-grid.min.css.map
+/WebContent/css/bootstrap/bootstrap-grid.css.map
+/WebContent/css/bootstrap/bootstrap-reboot.css
+/WebContent/css/bootstrap/bootstrap-reboot.css.map
+/WebContent/css/bootstrap/bootstrap-reboot.min.css.map
+/WebContent/js/bootstrap/bootstrap.bundle.js
+/WebContent/js/bootstrap/bootstrap.bundle.js.map
+/WebContent/js/bootstrap/bootstrap.bundle.min.js.map
+/WebContent/js/bootstrap/bootstrap.js
+/WebContent/js/bootstrap/bootstrap.js.map
+/WebContent/js/bootstrap/bootstrap.min.js.map
+
+#JQuery
+/WebContent/js/jquery/jquery-3.2.1.min.js
+/WebContent/js/jquery/jquery-3.2.1.min.map
