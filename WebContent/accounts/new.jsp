@@ -1,18 +1,29 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-    pageEncoding="ISO-8859-1"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>New Account</title>
-</head>
-<body>
+<%@include file="../include/header.jsp" %>
 <form action="./" method="post">
-	<input name="firstName" type="text" placeholder="First Name">
-	<input name="lastName" type="text" placeholder="Last Name">
-	<input name="username" type="text" placeholder="username">
-	<input name="password" type="password" placeholder="Password">
-	<input type="submit">
+  <div class="form-group row">
+    <label for="firstName" class="col-sm-2 col-form-label">First Name</label>
+    <div class="col-sm-10">
+      <input type="text" class="form-control" id="firstName" name="firstName">
+    </div>
+  </div>
+    <div class="form-group row">
+    <label for="lastName" class="col-sm-2 col-form-label">Last Name</label>
+    <div class="col-sm-10">
+      <input type="text" class="form-control" id="lastName" name="lastName">
+    </div>
+  </div>
+    <div class="form-group row">
+    <label for="username" class="col-sm-2 col-form-label">Username</label>
+    <div class="col-sm-10">
+      <input type="text" class="form-control" id="firstName" name="username">
+    </div>
+  </div>
+  <div class="form-group row">
+    <label for="password" class="col-sm-2 col-form-label">Password</label>
+    <div class="col-sm-10">
+      <input type="password" class="form-control" id="password" name="password" placeholder="Password">
+    </div>
+  </div>
+  <button type="submit" class="btn btn-primary">Register</button>
 </form>
-</body>
-</html>
+<%@include file="../include/header.jsp" %>
