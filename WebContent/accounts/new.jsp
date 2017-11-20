@@ -26,4 +26,4 @@
   </div>
   <button type="submit" class="btn btn-primary">Register</button>
 </form>
-<%@include file="../include/header.jsp" %>
+<%@include file="../include/footer.jsp" %>
