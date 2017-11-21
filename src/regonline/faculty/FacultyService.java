@@ -26,7 +26,8 @@ public class FacultyService extends HttpServlet {
 
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
+		request.setAttribute("faculties", dao.all());
+		request.getRequestDispatcher("index.jsp").forward(request, response);
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -35,11 +36,7 @@ public class FacultyService extends HttpServlet {
 		String name = request.getParameter("name");
 		faculty = new Faculty(code, name);
 		dao.save(faculty);
-		ObjectMapper mapper = new ObjectMapper();
-	    response.setContentType("application/json");
-	    response.setCharacterEncoding("UTF-8");
-		request.getSession().setAttribute("fuculties",
-				mapper.writeValueAsString(dao.all()));
+		request.setAttribute("faculties", dao.all());
 		request.getRequestDispatcher("index.jsp").forward(request, response);
 	}
 
