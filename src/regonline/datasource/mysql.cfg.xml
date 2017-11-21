@@ -5,12 +5,15 @@
 	<session-factory>
 		<property name="hibernate.dialect">org.hibernate.dialect.MySQL5Dialect</property>
 		<property name="hibernate.connection.driver_class">com.mysql.cj.jdbc.Driver</property>
-		<property name="hibernate.connection.url">jdbc:mysql://localhost/reg_online?autoReconnect=true&amp;useSSL=false</property>
+		<property name="hibernate.connection.url">jdbc:mysql://localhost/reg_online_development?autoReconnect=true&amp;useSSL=false</property>
 		<property name="hibernate.connection.username">dev</property>
 		<property name="connection.password">111111</property>
 		<property name="hibernate.hbm2ddl.auto">update</property>
 		<property name="hibernate.show_sql">true</property>
 
 		<mapping class="regonline.account.Account" />
+		<mapping class="regonline.faculty.Faculty" />
+		<mapping class="regonline.program.Program" />
+		<mapping class="regonline.course.Course" />
 	</session-factory>
 </hibernate-configuration>
