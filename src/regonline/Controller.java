@@ -131,6 +131,11 @@ public abstract class Controller<T> extends HttpServlet{
 	 * @throws ServletException
 	 * @throws IOException
 	 */
-	protected abstract void delete(HttpServletRequest request, HttpServletResponse response, String resourceId) throws ServletException, IOException;
-
+	protected void delete(HttpServletRequest request, HttpServletResponse response, String id) throws ServletException, IOException{
+		T obj = dao.load(id);
+		if(obj != null){
+			dao.delete(obj);
+		}
+		all(request, response);
+	}
 }

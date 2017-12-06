@@ -36,14 +36,4 @@ public class FacultyController extends Controller<Faculty> {
 		dao.update(faculty);
 		all(request, response);
 	}
-	
-    @Override
-	protected void delete(HttpServletRequest request, HttpServletResponse response, String id) throws ServletException, IOException{
-		Faculty faculty = dao.load(id);
-		if(faculty != null){
-			dao.delete(faculty);
-		}
-		all(request, response);
-	}
-
 }
