@@ -7,16 +7,20 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.StringUtils;
+
 import regonline.datasource.DAO;
 import regonline.faculty.Faculty;
 
-public abstract class GenericServlet<T> extends HttpServlet{
+public abstract class Controller<T> extends HttpServlet{
 	private static final long serialVersionUID = 1L;
 	protected DAO<T> dao;
+	private Class<T> type;
 	
 	
-	public GenericServlet(Class<T> type){
+	public Controller(Class<T> type){
 		dao = new DAO<>(type);
+		this.type = type;
 	}
 	
 	/**
@@ -31,8 +35,12 @@ public abstract class GenericServlet<T> extends HttpServlet{
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) 
 			throws ServletException, IOException {
 		String deleteId = request.getParameter("d");
+		String editId = request.getParameter("e");
 		if(deleteId != null){
 			delete(request, response, deleteId);
+		}
+		else if(editId != null){
+			edit(request, response, editId);
 		}
 		else{
 			all(request, response);
@@ -60,7 +68,25 @@ public abstract class GenericServlet<T> extends HttpServlet{
 	}
 	
 	/**
-	 * Handles GET requests
+	 * Used to show an update page, a GET request has to have a <b>e</b> parameter to indecate that
+	 * it is a request to edit a resource, the <b>e</b> parameter indicates the id of the resource to 
+	 * be edited, the method loads the <code>edit.jsp</code> page with an attribute
+	 * whose name is similar to the resource's class name (the name is all lower case), the 
+	 * attribute will contain the resource specified by the id which is the value of the <b>e</b> parameter.
+	 * @see #doGet(HttpServletRequest, HttpServletResponse)
+	 * @param request
+	 * @param response
+	 * @throws ServletException
+	 * @throws IOException
+	 */
+	protected void edit(HttpServletRequest request, HttpServletResponse response, String resourceId) 
+			throws ServletException, IOException{
+		request.setAttribute(StringUtils.lowerCase(type.getSimpleName()), dao.get(resourceId));
+		request.getRequestDispatcher("edit.jsp").forward(request, response);
+	}
+	
+	/**
+	 * Handles GET requests when retrieving all resources for a specified type
 	 * @see #doGet(HttpServletRequest, HttpServletResponse)
 	 * @param request
 	 * @param response
@@ -74,7 +100,7 @@ public abstract class GenericServlet<T> extends HttpServlet{
 	}
 	
 	/**
-	 * Handles POST requests
+	 * Handles POST requests when creating a resource
 	 * @see #doPost(HttpServletRequest, HttpServletResponse)
 	 * @param request
 	 * @param response
@@ -84,8 +110,8 @@ public abstract class GenericServlet<T> extends HttpServlet{
 	protected abstract void create(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException;
 	
 	/**
-	 * Used for updating a record, a POST request has to have a <code>u</code> parameter to be treated as
-	 * an update, the  <code>u</code> parameter indicates the id of the resource to be updated
+	 * Used for updating a record, a POST request has to have a <b>u</b> parameter to be treated as
+	 * an update, the <b>u</b> parameter indicates the id of the resource to be updated
 	 * @see #doPost(HttpServletRequest, HttpServletResponse)
 	 * @param request
 	 * @param response
@@ -93,10 +119,10 @@ public abstract class GenericServlet<T> extends HttpServlet{
 	 * @throws ServletException
 	 * @throws IOException
 	 */
-	protected abstract void update(HttpServletRequest request, HttpServletResponse response, String id) throws ServletException, IOException;
+	protected abstract void update(HttpServletRequest request, HttpServletResponse response, String resourceId) throws ServletException, IOException;
 	
 	/**
-	 * Used for deleting a resource, this is called from a GET request that has a <code>d</code> parameter, which
+	 * Used for deleting a resource, this is called from a GET request that has a <b>d</b> parameter, which
 	 * is an id of the resource to be deleted
 	 * @see #doGet(HttpServletRequest, HttpServletResponse)
 	 * @param request
@@ -105,6 +131,6 @@ public abstract class GenericServlet<T> extends HttpServlet{
 	 * @throws ServletException
 	 * @throws IOException
 	 */
-	protected abstract void delete(HttpServletRequest request, HttpServletResponse response, String id) throws ServletException, IOException;
+	protected abstract void delete(HttpServletRequest request, HttpServletResponse response, String resourceId) throws ServletException, IOException;
 
 }

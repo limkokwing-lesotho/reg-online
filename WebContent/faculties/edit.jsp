@@ -1,2 +1,2 @@
- <h1>New Faculty</h1>
+ <h1>Update Faculty</h1>
  <%@include file="_form.jsp" %>
