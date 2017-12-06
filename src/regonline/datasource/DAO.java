@@ -27,22 +27,42 @@ public class DAO<E>{
 		this.type = type;
 	}
 
-	/**
-	 * A few things to note about the save operation first, if the object being 
-	 * saved is an  instance of {@link AuditableModel}, updatedBy (the current user) 
-	 * and branch (the current branch) will be assigned to the object. And secondly 
-	 * the method will upload the object to the server
-	 * 
-	 * @param obj
-	 * @param saveAndSync
-	 */
 	public void save(E obj) {
 		
 		Transaction tx = null;
 		Session session = HibernateHelper.getSession();
 		try {
 			tx = session.beginTransaction();
-			session.saveOrUpdate(obj);
+			session.save(obj);
+			tx.commit();
+		}
+		catch(HibernateException ex){
+			try {
+				if(tx != null){
+					tx.rollback();
+				}
+			} catch (Exception e) {
+				logger.error("Unable to rollback transaction: "+ e);
+			}
+			ex.printStackTrace();
+			logger.error(ex);
+		}
+		catch (Exception ex) {
+			ex.printStackTrace();
+			logger.error(ex);
+		}
+		finally{
+			session.close();
+		}
+	}
+	
+	public void update(E obj) {
+		
+		Transaction tx = null;
+		Session session = HibernateHelper.getSession();
+		try {
+			tx = session.beginTransaction();
+			session.update(obj);
 			tx.commit();
 		}
 		catch(HibernateException ex){

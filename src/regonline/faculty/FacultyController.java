@@ -32,9 +32,8 @@ public class FacultyController extends Controller<Faculty> {
 	protected void update(HttpServletRequest request, HttpServletResponse response, String id)
 			throws ServletException, IOException {
 		Faculty faculty = dao.get(id);
-		faculty.setCode(request.getParameter("code"));
 		faculty.setName(request.getParameter("name"));
-		dao.save(faculty);
+		dao.update(faculty);
 		all(request, response);
 	}
 	

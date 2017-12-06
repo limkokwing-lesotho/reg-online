@@ -1,2 +1,2 @@
- <h1>Update Faculty</h1>
+ <h1>Update ${faculty.name}</h1>
  <%@include file="_form.jsp" %>
