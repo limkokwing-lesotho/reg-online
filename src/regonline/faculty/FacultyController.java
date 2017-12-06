@@ -12,10 +12,10 @@ import regonline.Controller;
 
 
 @WebServlet("/faculties/")
-public class FacultyService extends Controller<Faculty> {
+public class FacultyController extends Controller<Faculty> {
 	private static final long serialVersionUID = 1L;
 
-    public FacultyService() {
+    public FacultyController() {
         super(Faculty.class);
     }
 
