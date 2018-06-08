@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.text.WordUtils;
 
 import regonline.course.Course;
 import regonline.datasource.DAO;
@@ -26,12 +27,14 @@ public abstract class Controller<T extends Model> extends HttpServlet{
 	}
 	
 	/**
-	 * The method takes care of GET requests, if a request has a parameter named <b>d</b> 
+	 * The method takes care of GET requests: if a request has a parameter named <b>d</b> 
 	 * it will be treated as a DELETE request, and will be handled by
-	 * {@link #delete(HttpServletRequest, HttpServletResponse, String)} method <br/>
-	 * The <b>u</b>'s value should contain the id of a record that has to be deleted
-	 * If the method does not have the <b>d</b> parameter, the request will be treated as a normal 
-	 * GET request and the request will be handled by the
+	 * {@link #delete(HttpServletRequest, HttpServletResponse, String)} method
+	 * <b>d</b>'s value should contain the id of a record that has to be deleted.<br/>
+	 * If the request has a parameter named <b>e</b>, it will be treated as an "edit" request, 
+	 * the value of <b>e</b> is the id of a record to be edited. this request will be handled in the
+	 * {@link #edit(HttpServletRequest, HttpServletResponse, String)} method. <br/>
+	 * Otherwise the request will be treated as a normal GET request which will be handled by the
 	 * {@link #index(HttpServletRequest, HttpServletResponse)} method
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) 
@@ -51,11 +54,11 @@ public abstract class Controller<T extends Model> extends HttpServlet{
 
 	/**
 	 * The method takes care of POST requests, if a request has a parameter named <b>u</b>
-	 * it will be treated as a PUT request and therefore the request will be handled by 
+	 * it will be treated as a PUT request, handled by 
 	 * {@link #update(HttpServletRequest, HttpServletResponse, String)} method <br/>
 	 * The <b>u</b>'s value should contain the id of a record that has to be updated
 	 * If the method does not have the <b>u</b> parameter, the request will be treated as a normal 
-	 * POST request and the request will be handled by the
+	 * POST request which will be handled by the
 	 * {@link #create(HttpServletRequest, HttpServletResponse)} method
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) 
@@ -70,11 +73,12 @@ public abstract class Controller<T extends Model> extends HttpServlet{
 	}
 	
 	/**
-	 * Used to show an update page, a GET request has to have a <b>e</b> parameter to indecate that
-	 * it is a request to edit a resource, the <b>e</b> parameter indicates the id of the resource to 
-	 * be edited, the method loads the <code>edit.jsp</code> page with an attribute
-	 * whose name is similar to the resource's class name (the name is all lower case), the 
-	 * attribute will contain the resource specified by the id which is the value of the <b>e</b> parameter.
+	 * Used to show an edit page (a page used for editing a record). A GET request has to have a <b>e</b> 
+	 * parameter to indicate that it is a request to edit a resource (of type {@link Model}), the <b>e</b> parameter holds the 
+	 * value of the id for the resource to be edited, the method loads the <code>edit.jsp</code> page.<br/>
+	 * Before loading the page, an attribute is set in this request, this attribute is an object to be edited.
+	 * The attribute's name is the object's class name (the name is in camel cases with the first latter as
+	 * a lower case later), the value is the resource/object to be edited
 	 * @see #doGet(HttpServletRequest, HttpServletResponse)
 	 * @param request
 	 * @param response
@@ -83,10 +87,10 @@ public abstract class Controller<T extends Model> extends HttpServlet{
 	 */
 	protected void edit(HttpServletRequest request, HttpServletResponse response, String resourceId) 
 			throws ServletException, IOException{
-		request.setAttribute(StringUtils.lowerCase(type.getSimpleName()), dao.get(resourceId));
+		request.setAttribute(toCamelCase(type.getSimpleName()), dao.get(resourceId));
 		request.getRequestDispatcher("edit.jsp").forward(request, response);
 	}
-	
+
 	/**
 	 * Handles GET requests when retrieving all resources for a specified type and forwards a request
 	 * to the index page <br/>
@@ -112,8 +116,9 @@ public abstract class Controller<T extends Model> extends HttpServlet{
 	}
 
 	/**
-	 * Handles POST requests when creating a resource<br/>
-	 * Before forwarding the request the {@link #beforeCreate()} method is invoked
+	 * Handles POST requests when creating a resource (of type {@link Model})<br/>
+	 * Before forwarding the request, the {@link #create(Model, HttpServletRequest)} and 
+	 * {@link #createOrUpdate(Model, HttpServletRequest)} methods is invoked respectively
 	 * @see #doPost(HttpServletRequest, HttpServletResponse)
 	 * @param request
 	 * @param response
@@ -125,7 +130,10 @@ public abstract class Controller<T extends Model> extends HttpServlet{
 		T obj = null;
 		try {
 			obj = type.newInstance();
-			obj.setId(request.getParameter("id"));
+			String id = request.getParameter("id");
+			if(id != null){
+				obj.setId(request.getParameter("id"));
+			}
 			create(obj, request);
 			createOrUpdate(obj, request);
 		} catch (InstantiationException | IllegalAccessException e) {
@@ -135,13 +143,23 @@ public abstract class Controller<T extends Model> extends HttpServlet{
 		index(request, response);
 	}
 	
-	private void create(T obj, HttpServletRequest request) {
+	/**
+	 * The method is meant to be overridden (implemented) by a subclass of {@link Controller} to put code that
+	 * is intended to be executed before the object is persisted in the database. <br/>
+	 * This method is executed by the {@link #processCreateRequest(HttpServletRequest, HttpServletResponse)} 
+	 * before creating the object
+	 * @param obj
+	 * @param request
+	 */
+	protected void create(T obj, HttpServletRequest request) {
 		
 	}
 
 	/**
 	 * Used for updating a record, a POST request has to have a <b>u</b> parameter to be treated as
-	 * an update, the <b>u</b> parameter indicates the id of the resource to be updated
+	 * an update, the <b>u</b> parameter indicates the id of the resource to be updated. <br/>
+	 * Before forwarding the request the {@link #update(Model, HttpServletRequest)} and 
+	 * {@link #createOrUpdate(Model, HttpServletRequest)} methods is invoked respectively
 	 * @see #doPost(HttpServletRequest, HttpServletResponse)
 	 * @param request
 	 * @param response
@@ -158,10 +176,27 @@ public abstract class Controller<T extends Model> extends HttpServlet{
 		index(request, response);
 	}
 	
+	/**
+	 * The method is meant to be overridden (implemented) by a subclass of {@link Controller} to put code that
+	 * is intended to be executed before the object is persisted in the database. <br>
+	 * This method is executed by {@link #processUpdateRequest(HttpServletRequest, HttpServletResponse, String)}
+	 * method before updating an object
+	 * @param obj
+	 * @param request
+	 */
 	protected void update(T obj, HttpServletRequest request) {
 
 	}
 
+	/**
+	 * The method is meant to be overridden (implemented) by a subclass of {@link Controller} to put code that
+	 * is intended to be executed before the object is persisted in the database. <br>
+	 * This method is executed by either {@link #processCreateRequest(HttpServletRequest, HttpServletResponse)}
+	 * or {@link #processUpdateRequest(HttpServletRequest, HttpServletResponse, String)} 
+	 * before creating or updating an object
+	 * @param obj
+	 * @param request
+	 */
 	protected void createOrUpdate(T obj, HttpServletRequest request) {
 
 	}
@@ -182,5 +217,15 @@ public abstract class Controller<T extends Model> extends HttpServlet{
 			dao.delete(obj);
 		}
 		index(request, response);
+	}
+	
+	
+	private String toCamelCase(String name) {
+		if(name == null || name.trim().isEmpty()){
+			return name;
+		}
+		char[] buffer = name.toCharArray();
+		buffer[0] = Character.toLowerCase(buffer[0]);
+		return new String(buffer);
 	}
 }
