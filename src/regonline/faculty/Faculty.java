@@ -1,10 +1,14 @@
 package regonline.faculty;
 
+import java.io.Serializable;
+
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
+import regonline.Model;
+
 @Entity
-public class Faculty {
+public class Faculty implements Model {
 
 	@Id
 	private String code;
@@ -33,4 +37,17 @@ public class Faculty {
 		this.name = name;
 	}
 	
+	@Override
+	public String toString() {
+		return name;
+	}
+	
+	@Override
+	public void setId(Serializable id) {
+		this.code = (String) id;
+	}
+	@Override
+	public Serializable getId() {
+		return code;
+	}
 }

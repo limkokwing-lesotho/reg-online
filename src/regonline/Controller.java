@@ -9,10 +9,12 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
 
+import regonline.course.Course;
 import regonline.datasource.DAO;
+import regonline.datasource.HibernateHelper;
 import regonline.faculty.Faculty;
 
-public abstract class Controller<T> extends HttpServlet{
+public abstract class Controller<T extends Model> extends HttpServlet{
 	private static final long serialVersionUID = 1L;
 	protected DAO<T> dao;
 	private Class<T> type;
@@ -30,7 +32,7 @@ public abstract class Controller<T> extends HttpServlet{
 	 * The <b>u</b>'s value should contain the id of a record that has to be deleted
 	 * If the method does not have the <b>d</b> parameter, the request will be treated as a normal 
 	 * GET request and the request will be handled by the
-	 * {@link #all(HttpServletRequest, HttpServletResponse)} method
+	 * {@link #index(HttpServletRequest, HttpServletResponse)} method
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) 
 			throws ServletException, IOException {
@@ -43,7 +45,7 @@ public abstract class Controller<T> extends HttpServlet{
 			edit(request, response, editId);
 		}
 		else{
-			all(request, response);
+			index(request, response);
 		}
 	}
 
@@ -60,10 +62,10 @@ public abstract class Controller<T> extends HttpServlet{
 			throws ServletException, IOException{
 		String updateId = request.getParameter("u");
 		if(updateId != null){
-			update(request, response, updateId);
+			processUpdateRequest(request, response, updateId);
 		}
 		else{
-			create(request, response);
+			processCreateRequest(request, response);
 		}
 	}
 	
@@ -86,29 +88,57 @@ public abstract class Controller<T> extends HttpServlet{
 	}
 	
 	/**
-	 * Handles GET requests when retrieving all resources for a specified type
+	 * Handles GET requests when retrieving all resources for a specified type and forwards a request
+	 * to the index page <br/>
+	 * Before forwarding the request the {@link #beforeIndex()} method is invoked
 	 * @see #doGet(HttpServletRequest, HttpServletResponse)
 	 * @param request
 	 * @param response
 	 * @throws ServletException
 	 * @throws IOException
 	 */
-	protected void all(HttpServletRequest request, HttpServletResponse response) 
+	protected void index(HttpServletRequest request, HttpServletResponse response) 
 			throws ServletException, IOException{
 		request.setAttribute("all", dao.all());
+		beforeIndex();
 		request.getRequestDispatcher("index.jsp").forward(request, response);
 	}
 	
 	/**
-	 * Handles POST requests when creating a resource
+	 * Used to write code that needs to be executed before the index page is loaded
+	 */
+	protected void beforeIndex() {
+		
+	}
+
+	/**
+	 * Handles POST requests when creating a resource<br/>
+	 * Before forwarding the request the {@link #beforeCreate()} method is invoked
 	 * @see #doPost(HttpServletRequest, HttpServletResponse)
 	 * @param request
 	 * @param response
 	 * @throws ServletException
 	 * @throws IOException
 	 */
-	protected abstract void create(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException;
+	protected void processCreateRequest(HttpServletRequest request, HttpServletResponse response) 
+			throws ServletException, IOException{
+		T obj = null;
+		try {
+			obj = type.newInstance();
+			obj.setId(request.getParameter("id"));
+			create(obj, request);
+			createOrUpdate(obj, request);
+		} catch (InstantiationException | IllegalAccessException e) {
+			e.printStackTrace();
+		}
+		dao.save(obj);
+		index(request, response);
+	}
 	
+	private void create(T obj, HttpServletRequest request) {
+		
+	}
+
 	/**
 	 * Used for updating a record, a POST request has to have a <b>u</b> parameter to be treated as
 	 * an update, the <b>u</b> parameter indicates the id of the resource to be updated
@@ -119,8 +149,23 @@ public abstract class Controller<T> extends HttpServlet{
 	 * @throws ServletException
 	 * @throws IOException
 	 */
-	protected abstract void update(HttpServletRequest request, HttpServletResponse response, String resourceId) throws ServletException, IOException;
+	protected void processUpdateRequest(HttpServletRequest request, HttpServletResponse response, String resourceId) 
+			throws ServletException, IOException{
+		T obj = dao.get(resourceId);
+		update(obj, request);
+		createOrUpdate(obj, request);
+		dao.update(obj);
+		index(request, response);
+	}
 	
+	protected void update(T obj, HttpServletRequest request) {
+
+	}
+
+	protected void createOrUpdate(T obj, HttpServletRequest request) {
+
+	}
+
 	/**
 	 * Used for deleting a resource, this is called from a GET request that has a <b>d</b> parameter, which
 	 * is an id of the resource to be deleted
@@ -136,6 +181,6 @@ public abstract class Controller<T> extends HttpServlet{
 		if(obj != null){
 			dao.delete(obj);
 		}
-		all(request, response);
+		index(request, response);
 	}
 }

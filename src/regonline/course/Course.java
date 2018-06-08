@@ -1,14 +1,20 @@
 package regonline.course;
 
+import java.io.Serializable;
 import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinTable;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
+import regonline.Model;
+import regonline.datasource.DAO;
+import regonline.faculty.Faculty;
+
 @Entity
-public class Course {
+public class Course implements Model {
 
 	public enum Type{
 		Minor,
@@ -20,11 +26,13 @@ public class Course {
 	private String code;
 	private String name;
 	private Type type;
-	private double credits;
+	private int credits;
 	@OneToMany @JoinTable(name= "course_prerequisites")
 	private List<Course> prerequisites;
+	@ManyToOne
+	private Faculty faculty;
 	
-	public Course(String code, String name, Type type, double credits) {
+	public Course(String code, String name, Type type, int credits) {
 		super();
 		this.code = code;
 		this.name = name;
@@ -54,10 +62,10 @@ public class Course {
 	public void setType(Type type) {
 		this.type = type;
 	}
-	public double getCredits() {
+	public int getCredits() {
 		return credits;
 	}
-	public void setCredits(double credits) {
+	public void setCredits(int credits) {
 		this.credits = credits;
 	}
 
@@ -68,5 +76,22 @@ public class Course {
 	public void setPrerequisites(List<Course> prerequisites) {
 		this.prerequisites = prerequisites;
 	}
+
+	public Faculty getFaculty() {
+		return faculty;
+	}
+
+	public void setFaculty(Faculty faculty) {
+		this.faculty = faculty;
+	}
 	
+	@Override
+	public void setId(Serializable id) {
+		this.code = (String) id;
+	}
+
+	@Override
+	public Serializable getId() {
+		return code;
+	}
 }

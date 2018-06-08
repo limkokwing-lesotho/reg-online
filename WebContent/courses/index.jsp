@@ -5,12 +5,16 @@
 	<tr>
 		<th>Code</th>
 		<th>Name</th>
+		<th>Type</th>
+		<th>Faculty</th>
 		<th>Action</th>
 	</tr>
 	<c:forEach var="course" items="${all}" varStatus="counter">
 	<tr>
 		<td><c:out value="${course.code}" /></td>
 		<td><c:out value="${course.name}" /></td>
+		<td><c:out value="${course.type}" /></td>
+		<td><c:out value="${course.faculty}" /></td>
 		<td>
 		<c:url value="./" var="delete_url">
 			<c:param name="d" value="${course.code}" />

@@ -20,20 +20,8 @@ public class FacultyController extends Controller<Faculty> {
     }
 
     @Override
-	protected void create(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		Faculty faculty = new Faculty();
-		faculty.setCode(request.getParameter("code"));
+    protected void createOrUpdate(Faculty faculty, HttpServletRequest request) {
 		faculty.setName(request.getParameter("name"));
-		dao.save(faculty);
-		all(request, response);
-	}
+    }
 	
-	@Override
-	protected void update(HttpServletRequest request, HttpServletResponse response, String id)
-			throws ServletException, IOException {
-		Faculty faculty = dao.get(id);
-		faculty.setName(request.getParameter("name"));
-		dao.update(faculty);
-		all(request, response);
-	}
 }
