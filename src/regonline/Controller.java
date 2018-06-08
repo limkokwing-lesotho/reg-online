@@ -1,22 +1,18 @@
 package regonline;
 
 import java.io.IOException;
+import java.io.Serializable;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.text.WordUtils;
-
-import regonline.course.Course;
 import regonline.datasource.DAO;
-import regonline.datasource.HibernateHelper;
-import regonline.faculty.Faculty;
+import regonline.utils.TypeUtils;
 
 public abstract class Controller<T extends Model> extends HttpServlet{
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = -1150756715808603504L;
 	protected DAO<T> dao;
 	private Class<T> type;
 	
@@ -132,7 +128,7 @@ public abstract class Controller<T extends Model> extends HttpServlet{
 			obj = type.newInstance();
 			String id = request.getParameter("id");
 			if(id != null){
-				obj.setId(request.getParameter("id"));
+				obj.setId(castId(id));
 			}
 			create(obj, request);
 			createOrUpdate(obj, request);
@@ -142,7 +138,7 @@ public abstract class Controller<T extends Model> extends HttpServlet{
 		dao.save(obj);
 		index(request, response);
 	}
-	
+
 	/**
 	 * The method is meant to be overridden (implemented) by a subclass of {@link Controller} to put code that
 	 * is intended to be executed before the object is persisted in the database. <br/>
@@ -227,5 +223,11 @@ public abstract class Controller<T extends Model> extends HttpServlet{
 		char[] buffer = name.toCharArray();
 		buffer[0] = Character.toLowerCase(buffer[0]);
 		return new String(buffer);
+	}
+	
+	private Serializable castId(String id) {
+		Serializable s = null;
+		s = (Serializable) TypeUtils.castType(id, TypeUtils.getIdField(type).getType());
+		return s;
 	}
 }
