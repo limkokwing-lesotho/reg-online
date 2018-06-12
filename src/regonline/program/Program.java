@@ -21,8 +21,6 @@ public class Program implements Model {
 	private String name;
 	@ManyToOne
 	private Faculty faculty;
-	@OneToMany
-	private List<Course> courses;
 	
 	public Program(String code, String name) {
 		super();
@@ -50,18 +48,6 @@ public class Program implements Model {
 	}
 	public void setFaculty(Faculty faculty) {
 		this.faculty = faculty;
-	}
-	public List<Course> getCourses() {
-		return courses;
-	}
-	public void setCourses(List<Course> courses) {
-		this.courses = courses;
-	}
-	public void addCourse(Course course){
-		if(courses == null){
-			courses = new ArrayList<>();
-		}
-		courses.add(course);
 	}
 	@Override
 	public void setId(Serializable id) {
