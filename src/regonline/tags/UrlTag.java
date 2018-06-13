@@ -22,7 +22,7 @@ public class UrlTag extends SimpleTagSupport {
 	public void doTag() throws JspException, IOException {
 		if (type != null) {
 			JspWriter out = getJspContext().getOut();
-			if(type.equalsIgnoreCase("Update")){
+			if(type.equalsIgnoreCase("Edit")){
 				out.println("<a href='./?e="+id+"'>"+type+"</a>");
 			}
 			else if(type.equalsIgnoreCase("Delete")){

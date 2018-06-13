@@ -13,7 +13,7 @@
 		<td><c:out value="${faculty.code}" /></td>
 		<td><c:out value="${faculty.name}" /></td>
 		<td>
-			<ex:url type="Update" id="${faculty.id}"/>
+			<ex:url type="Edit" id="${faculty.id}"/>
 			<ex:url type="Delete" id="${faculty.id}"/>
 		</td>
 	</tr>

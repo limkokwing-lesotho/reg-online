@@ -16,7 +16,7 @@
 		<td><c:out value="${program.name}" /></td>
 		<td><c:out value="${program.faculty}" /></td>
 		<td>
-			<ex:url type="Update" id="${program.id}"/>
+			<ex:url type="Edit" id="${program.id}"/>
 			<ex:url type="Delete" id="${program.id}"/>
 		</td>
 	</tr>
