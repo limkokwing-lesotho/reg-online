@@ -1,22 +1,27 @@
-package regonline.account;
+package regonline.user;
+
+import java.io.Serializable;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
+import regonline.Model;
+
 @Entity
-public class Account {
+public class User implements Model {
 
 	@Id
 	private String username;
 	private String firstName;
 	private String lastName;
 	private String password;
+	private boolean hasOTP;
 	
-	public Account(){
+	public User(){
 		
 	}
 	
-	public Account(String username, String firstName, String lastName, String password) {
+	public User(String username, String firstName, String lastName, String password) {
 		super();
 		this.username = username;
 		this.firstName = firstName;
@@ -47,6 +52,28 @@ public class Account {
 	}
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+	public boolean getHasOTP() {
+		return hasOTP;
+	}
+
+	public void setHasOTP(boolean hasOTP) {
+		this.hasOTP = hasOTP;
+	}
+
+	public String getFullName(){
+		return firstName +" "+ lastName;
+	}
+
+	@Override
+	public void setId(Serializable id) {
+		this.username = (String) id;
+	}
+
+	@Override
+	public Serializable getId() {
+		return username;
 	}
 	
 }

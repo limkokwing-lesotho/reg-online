@@ -10,9 +10,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import regonline.datasource.DAO;
 import regonline.utils.TypeUtils;
-
+@SuppressWarnings("serial")
 public abstract class Controller<T extends Model> extends HttpServlet{
-	private static final long serialVersionUID = -1150756715808603504L;
 	protected DAO<T> dao;
 	private Class<T> type;
 	

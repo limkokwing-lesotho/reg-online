@@ -11,7 +11,7 @@
 		<property name="hibernate.hbm2ddl.auto">update</property>
 		<property name="hibernate.show_sql">true</property>
 
-		<mapping class="regonline.account.Account" />
+		<mapping class="regonline.user.User" />
 		<mapping class="regonline.faculty.Faculty" />
 		<mapping class="regonline.program.Program" />
 		<mapping class="regonline.course.Course" />
