@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.mindrot.jbcrypt.BCrypt;
 
 import regonline.Controller;
+import regonline.auth.SecurityConfig;
 
 
 @WebServlet("/users/")
@@ -30,5 +31,12 @@ public class UserController extends Controller<User> {
     	String password = request.getParameter("password");
     	password = BCrypt.hashpw(password, BCrypt.gensalt());
     	user.setPassword(password);
+    	if(request.getParameter("role").equals("admin")){
+    		user.addRole(SecurityConfig.ROLE_USER);
+    		user.addRole(SecurityConfig.ROLE_ADMIN);
+    	}
+    	else{
+    		user.addRole(SecurityConfig.ROLE_USER);
+    	}
     }
 }

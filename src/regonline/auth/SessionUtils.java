@@ -7,7 +7,7 @@ import javax.servlet.http.HttpSession;
 
 import regonline.user.User;
  
-public class AppUtils {
+public class SessionUtils {
  
     private static int REDIRECT_ID = 0;
  

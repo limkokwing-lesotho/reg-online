@@ -36,7 +36,7 @@ public class SecurityFilter implements Filter {
  
         // User information stored in the Session.
         // (After successful login).
-        User loginedUser = AppUtils.getLoginedUser(request.getSession());
+        User loginedUser = SessionUtils.getLoginedUser(request.getSession());
  
         if (servletPath.equals("/login")) {
             chain.doFilter(request, response);
@@ -65,7 +65,7 @@ public class SecurityFilter implements Filter {
                 String requestUri = request.getRequestURI();
  
                 // Store the current page to redirect to after successful login.
-                int redirectId = AppUtils.storeRedirectAfterLoginUrl(request.getSession(), requestUri);
+                int redirectId = SessionUtils.storeRedirectAfterLoginUrl(request.getSession(), requestUri);
  
                 response.sendRedirect(wrapRequest.getContextPath() + "/login?redirectId=" + redirectId);
                 return;

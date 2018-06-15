@@ -34,12 +34,12 @@ public class LoginServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
  
-        String userName = request.getParameter("userName");
+        String userName = request.getParameter("username");
         String password = request.getParameter("password");
         User userAccount = new UserDAO().authenticate(userName, password);
  
         if (userAccount == null) {
-            String errorMessage = "Invalid userName or Password";
+            String errorMessage = "Invalid username or Password";
  
             request.setAttribute("errorMessage", errorMessage);
  
@@ -50,21 +50,22 @@ public class LoginServlet extends HttpServlet {
             return;
         }
  
-        AppUtils.storeLoginedUser(request.getSession(), userAccount);
+        SessionUtils.storeLoginedUser(request.getSession(), userAccount);
  
         // 
         int redirectId = -1;
         try {
             redirectId = Integer.parseInt(request.getParameter("redirectId"));
-        } catch (Exception e) {
-        }
-        String requestUri = AppUtils.getRedirectAfterLoginUrl(request.getSession(), redirectId);
+        } catch (Exception e) {}
+        
+        String requestUri = SessionUtils.getRedirectAfterLoginUrl(request.getSession(), redirectId);
         if (requestUri != null) {
             response.sendRedirect(requestUri);
         } else {
             // Default after successful login
             // redirect to /userInfo page
-            response.sendRedirect(request.getContextPath() + "/userInfo");
+//            response.sendRedirect(request.getContextPath() + "/userInfo");
+        	response.sendRedirect(request.getContextPath() + "/index.jsp");
         }
  
     }

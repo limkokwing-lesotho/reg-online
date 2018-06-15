@@ -15,7 +15,7 @@
          <table border="0">
             <tr>
                <td>User Name</td>
-               <td><input type="text" name="userName" value= "${user.userName}" /> </td>
+               <td><input type="text" name="username" value= "${user.username}" /> </td>
             </tr>
             <tr>
                <td>Password</td>
@@ -30,8 +30,6 @@
             </tr>
          </table>
       </form>
- 
-      <p style="color:blue;">Login with:</p>
  
    </body>
 </html>

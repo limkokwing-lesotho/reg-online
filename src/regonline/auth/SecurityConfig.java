@@ -32,7 +32,6 @@ public class SecurityConfig {
         // Configure For "ADMIN" Role.
         List<String> adminUrls = new ArrayList<String>();
  
-        adminUrls.addAll(userUrls);
         adminUrls.add("/faculties/");
 //        adminUrls.add("/users/");
  
