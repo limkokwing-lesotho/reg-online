@@ -19,7 +19,7 @@ public class UserController extends Controller<User> {
     
 	@Override
 	protected void create(User user, HttpServletRequest request) {
-    	String password = BCrypt.hashpw("111111", BCrypt.gensalt());
+    	String password = "111111";
     	user.setPassword(password);
     	user.setHasOTP(true);
 	}
