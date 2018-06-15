@@ -18,5 +18,12 @@
     <label for="lastName">Second Name</label>
     <input type="text" class="form-control" id="lastName" name="lastName" value="${user.lastName}" required="required">
   </div>
+   <div class="form-group">
+    <label for="faculty">Role</label>
+    <select class="form-control" id="role" name="role">
+      <option value="user">User</option>
+      <option value="admin">Admin</option>
+    </select>
+  </div>
   <button type="submit" class="btn btn-default">Submit</button>
 </form> 

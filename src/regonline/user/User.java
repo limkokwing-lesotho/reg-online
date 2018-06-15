@@ -1,9 +1,14 @@
 package regonline.user;
 
 import java.io.Serializable;
+import java.util.List;
 
+import javax.persistence.CollectionTable;
+import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 
 import regonline.Model;
 
@@ -16,6 +21,11 @@ public class User implements Model {
 	private String lastName;
 	private String password;
 	private boolean hasOTP;
+	
+	@ElementCollection
+	@CollectionTable(name="roles", joinColumns=@JoinColumn(name="user_id"))
+	@Column(name="role")
+	private List<String> roles;
 	
 	public User(){
 		
@@ -60,6 +70,14 @@ public class User implements Model {
 
 	public void setHasOTP(boolean hasOTP) {
 		this.hasOTP = hasOTP;
+	}
+
+	public List<String> getRoles() {
+		return roles;
+	}
+
+	public void setRoles(List<String> roles) {
+		this.roles = roles;
 	}
 
 	public String getFullName(){
